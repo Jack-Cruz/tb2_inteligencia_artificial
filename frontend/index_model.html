@@ -1,0 +1,192 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" type="image/png" sizes="32x32" href="upc_logo_32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="upc_logo_16x16.png">
+    <title>Predecir precio de autos</title>
+
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" 
+    rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" 
+    crossorigin="anonymous">
+
+    <style>
+      #resultado {
+        font-weight:  bold;
+        font-size:  1.2rem;
+        text-align: center;
+      }
+    </style>
+
+  </head>
+  <body>
+    
+    <main>
+      <div class="px-4 py-2 my-2 text-center border-bottom">
+        <img class="d-block mx-auto mb-2" src="upc_logo.png" alt="" width="80" height="80">
+        <h1 class="display-5 fw-bold">Predecir precio de autos</h1>
+        <h2 class="display-5 fw-bold">Modelo de Red Neuronal en Python</h2>
+        <div class="col-lg-6 mx-auto">
+          <p class="lead mb-0">Predecir el precio de un auto utilizando Tensorflow.js</p>
+        </div>
+      </div>
+
+      <div class="b-example-divider"></div>
+
+      <div class="container mt-5">
+        <div class="row">
+          <div class="col-12 col-md-4 offset-md-4">
+            <form action="/action_page.php">
+              <label for="marca">Seleccione un modelo:</label>
+              <select id="marca" name="marca">
+                <option value="Audi">Audi</option>
+                <option value="Mercedes">Mercedes</option>
+              </select>
+              
+            </form>
+            <form action="/action_page.php">
+              <label for="cars">Seleccione un modelo:</label>
+              <select id="cars" name="cars">
+                <option value="A1">A1</option>
+                <option value="A6">A6</option>
+                <option value="A4">A4</option>
+                <option value="A3">A3</option>
+                <option value="Q3">Q3</option>
+              </select>
+              
+            </form>
+
+            <form>
+              <div class="mb-3">
+                <label for="anio" class="form-label">a&ntilde;o del vehiculo: <span id="lbl-anio">2015</span></label>
+                  <input type="range" class="form-range" min="2010" max="2020" id="anio" oninput="cambiarAnio();">
+                <div class="form-text">Desliza para cambiar el a&ntilde;o del vehiculo</div>
+              </div>
+              
+            </form>
+
+            <form action="/action_page.php">
+              <label for="transmision">Seleccione un tipo de transmision:</label>
+              <select id="transmision" name="transmision">
+                <option value="Manual">Manual</option>
+                <option value="Semi">Semi-Automatico</option>
+                <option value="Automatico">Automatico</option>
+              </select>
+              
+            </form>
+
+            <form>
+              <div class="mb-3">
+                <label for="kilometraje" class="form-label">kilometraje del vehiculo: <span id="lbl-kilometraje">0</span></label>
+                  <input type="range" class="form-range" min="0" max="100000" id="kilometraje"  oninput="cambiarKilometraje();">
+                <div class="form-text">Desliza para cambiar el kilometraje del vehiculo</div>
+              </div>
+              <form>
+                <div class="mb-3">
+                  <label for="impuesto" class="form-label">impuesto del vehiculo: <span id="lbl-impuesto">0</span></label>
+                    <input type="range" class="form-range" min="0" max="580" id="impuesto"  oninput="cambiarImpuesto();" >
+                  <div class="form-text">Desliza para cambiar el impuesto del vehiculo</div>
+                </div>
+              </form>
+
+              <form action="/action_page.php">
+                <label for="fuelType">Seleccione un tipo de combustible:</label>
+                <select id="fuelType" name="fuelType">
+                  <option value="Diesel">Diesel</option>
+                  <option value="Petroleo">Petroleo</option>
+                  <option value="Otro">Otro</option>
+                </select>
+                
+              </form>
+
+              <form>
+                <div class="mb-3">
+                  <label for="motor" class="form-label">Tamaño del motor del vehiculo: <span id="lbl-motor">0</span></label>
+                    <input type="range" class="form-range" min="18" max="188" id="motor"  oninput="cambiarMotor();" >
+                  <div class="form-text">Desliza para cambiar el tamaño del motor del vehiculo</div>
+                </div>
+              </form>
+
+              <form>
+                <div class="mb-3">
+                  <label for="millas" class="form-label">millas del vehiculo: <span id="lbl-millas">0</span></label>
+                    <input type="range" class="form-range" min="18" max="188" id="millas"  oninput="cambiarMillas();" >
+                  <div class="form-text">Desliza para cambiar las millas del vehiculo</div>
+                </div>
+              </form>
+
+              <div class="mb-3">
+                <label for="celsius" class="form-label">Resultado</label>
+                <div id="resultado">
+                  0 grados celsius son 32 grados fahrenheit
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+
+
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@2.0.0/dist/tf.min.js"></script>
+
+
+
+    <script type="text/javascript">
+
+      var modelo = null;
+
+      //Cargar modelo
+      (async () => {
+          console.log("Cargando modelo...");
+          modelo = await tf.loadLayersModel("model.json");
+          console.log("Modelo cargado...");
+      })();
+
+      //Funciones para actualizar valores en la pantalla
+      function cambiarAnio(){
+        var anio = document.getElementById("anio").value;
+        document.getElementById("lbl-anio").innerHTML=anio;
+      }
+
+      function cambiarKilometraje(){
+        var kilometraje = document.getElementById("kilometraje").value;
+        document.getElementById("lbl-kilometraje").innerHTML=kilometraje;
+      }
+
+      function cambiarImpuesto(){
+        var impuesto = document.getElementById("impuesto").value;
+        document.getElementById("lbl-impuesto").innerHTML=impuesto;
+      }
+
+      function cambiarMillas(){
+        var millas = document.getElementById("millas").value;
+        document.getElementById("lbl-millas").innerHTML=millas;
+      }
+
+      function cambiarMotor(){
+        var motor = document.getElementById("motor").value;
+        document.getElementById("lbl-motor").innerHTML=motor;
+      }
+
+      // Funcion donde se realiza la prediccion
+      function cambiarCelsius() {
+        var celsius = document.getElementById("celsius").value;
+        document.getElementById("lbl-celsius").innerHTML=celsius;
+        if (modelo != null) {
+          var tensor = tf.tensor1d([parseInt(celsius)]);
+          var prediccion = modelo.predict(tensor).dataSync();
+          prediccion = Math.round(prediccion, 1);
+          document.getElementById("resultado").innerHTML = celsius + " celsius son " + prediccion + " fahrenheit!";
+        } else {
+          document.getElementById("resultado").innerHTML = "Intenta de nuevo en un momento...";
+        }
+      }
+    </script>
+  </body>
+</html>
