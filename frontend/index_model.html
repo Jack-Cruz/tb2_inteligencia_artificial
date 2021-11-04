@@ -38,25 +38,29 @@
       <div class="container mt-5">
         <div class="row">
           <div class="col-12 col-md-4 offset-md-4">
-            <form action="/action_page.php">
-              <label for="marca">Seleccione un modelo:</label>
-              <select id="marca" name="marca">
-                <option value="Audi">Audi</option>
-                <option value="Mercedes">Mercedes</option>
+            <form>
+              <label for="marca">Seleccione una marca:</label>
+              <select id="marca" name="marca", onchange="dynamicdropdown();">
+                <option value="">Seleccione una marca</option>
+                <option value="0">Audi</option>
+                <option value="1">Bmw</option>
+                <option value="2">Hyundi</option>
+                <option value="3">Mercedes</option>
+                <option value="4">Toyota</option>
               </select>
               
             </form>
-            <form action="/action_page.php">
-              <label for="cars">Seleccione un modelo:</label>
-              <select id="cars" name="cars">
-                <option value="A1">A1</option>
-                <option value="A6">A6</option>
-                <option value="A4">A4</option>
-                <option value="A3">A3</option>
-                <option value="Q3">Q3</option>
-              </select>
-              
-            </form>
+            
+            <div class="sub_modelo_div" id="sub_modelo_div">Seleccione un modelo:
+              <script type="text/javascript" language="JavaScript">
+                  document.write('<select name="modelo" id="modelo"><option value="">Seleccione un modelo: </option></select>')
+              </script>
+              <noscript>
+                  <select name="modelo" id="modelo" >
+                      <option value="">Seleccione un modelo:</option>
+                  </select>
+              </noscript>
+          </div>
 
             <form>
               <div class="mb-3">
@@ -67,12 +71,13 @@
               
             </form>
 
-            <form action="/action_page.php">
+            <form>
               <label for="transmision">Seleccione un tipo de transmision:</label>
               <select id="transmision" name="transmision">
-                <option value="Manual">Manual</option>
-                <option value="Semi">Semi-Automatico</option>
-                <option value="Automatico">Automatico</option>
+                <option value="0">Manual</option>
+                <option value="1">Automatico</option>
+                <option value="2">Semi-Automatico</option>
+                <option value="3">Otro</option>
               </select>
               
             </form>
@@ -91,12 +96,13 @@
                 </div>
               </form>
 
-              <form action="/action_page.php">
+              <form>
                 <label for="fuelType">Seleccione un tipo de combustible:</label>
                 <select id="fuelType" name="fuelType">
-                  <option value="Diesel">Diesel</option>
-                  <option value="Petroleo">Petroleo</option>
-                  <option value="Otro">Otro</option>
+                  <option value="0">Petroleo</option>
+                  <option value="1">Diesel</option>
+                  <option value="2">hibrido</option>
+                  <option value="3">Otro</option>
                 </select>
                 
               </form>
@@ -120,9 +126,10 @@
               <div class="mb-3">
                 <label for="celsius" class="form-label">Resultado</label>
                 <div id="resultado">
-                  0 grados celsius son 32 grados fahrenheit
+                  Esperando a que se envien los datos
                 </div>
               </div>
+              <button type="button" onclick="predict();">¡Predicir!</button>
             </form>
           </div>
         </div>
@@ -147,8 +154,53 @@
           modelo = await tf.loadLayersModel("model.json");
           console.log("Modelo cargado...");
       })();
+      
 
       //Funciones para actualizar valores en la pantalla
+
+      function dynamicdropdown(){
+        iMarca = document.getElementById("marca").value;
+        //console.log(iMarca);
+        switch(iMarca){
+          case "0":
+            document.getElementById("modelo").options[0]=new Option("A1","0");
+            document.getElementById("modelo").options[1]=new Option("A6","1");
+            document.getElementById("modelo").options[2]=new Option("A4","2");
+            document.getElementById("modelo").options[3]=new Option("A3","3");
+            document.getElementById("modelo").options[4]=new Option("Q3","4");
+            break;
+          case "1":
+            document.getElementById("modelo").options[0]=new Option("5 Series","5");
+            document.getElementById("modelo").options[1]=new Option("6 Series","6");
+            document.getElementById("modelo").options[2]=new Option("1 Series","7");
+            document.getElementById("modelo").options[3]=new Option("7 Series","8");
+            document.getElementById("modelo").options[4]=new Option("2 Series","9");
+            break;
+          case "2":
+            document.getElementById("modelo").options[0]=new Option("GT86","10");
+            document.getElementById("modelo").options[1]=new Option("Corolla","11");
+            document.getElementById("modelo").options[2]=new Option("RAV4","12");
+            document.getElementById("modelo").options[3]=new Option("Yaris","13");
+            document.getElementById("modelo").options[4]=new Option("Auris","14");
+            break;
+          case "3":
+            document.getElementById("modelo").options[0]=new Option("I20","15");
+            document.getElementById("modelo").options[1]=new Option("Tucson","16");
+            document.getElementById("modelo").options[2]=new Option("I10","17");
+            document.getElementById("modelo").options[3]=new Option("IX35","18");
+            document.getElementById("modelo").options[4]=new Option("I30","19");
+            break;
+          case "4":
+            document.getElementById("modelo").options[0]=new Option("SLK","20");
+            document.getElementById("modelo").options[1]=new Option("S Class","21");
+            document.getElementById("modelo").options[2]=new Option("SL Class","22");
+            document.getElementById("modelo").options[3]=new Option("G Class","23");
+            document.getElementById("modelo").options[4]=new Option("GLE Class","24");
+            break;
+        }
+
+      }
+
       function cambiarAnio(){
         var anio = document.getElementById("anio").value;
         document.getElementById("lbl-anio").innerHTML=anio;
@@ -174,15 +226,121 @@
         document.getElementById("lbl-motor").innerHTML=motor;
       }
 
+      // Funciones auxiliares para la prediccion
+      function fixKilometraje(){
+        var val = document.getElementById("kilometraje").value;
+        if (val <= 2928.0){
+          return 0;
+        }
+        else if (val > 2928.0 && val<= 6000.0){
+          return 1;
+        }
+        else if (val > 6000.0 && val<= 9857.0){
+          return 2;
+        }
+        else if (val > 9857.0 && val<= 14772.0){
+          return 3;
+        }
+        else if (val > 14772.0 && val<= 20022.0){
+          return 4;
+        }
+        else if (val > 20022.0 && val<= 25635.0){
+          return 5;
+        }
+        else if (val > 25635.0 && val<= 31544.0){
+          return 6;
+        }
+        else if (val > 31544.0 && val<= 40000.0){
+          return 7;
+        }
+        else if (val > 40000.0 && val<= 54591.8){
+          return 8;
+        }
+        else{
+          return 9;
+        }
+      }
+      
+      function fixImpuesto(){
+        var val = document.getElementById("impuesto").value;
+        if (val <= 30.0){
+          return 0;
+        }
+        else if (val > 30.0 && val <= 145.0){
+          return 1;
+        }
+        else{
+          return 2;
+        }
+      }
+      
+      function fixMillas(){
+        var val = document.getElementById("millas").value;
+        if (val <= 39.2){
+          return 0;
+        }
+        else if (val > 39.2 && val<= 44.8){
+          return 1;
+        }
+        else if (val > 44.8 && val<= 47.9){
+          return 2;
+        }
+        else if (val > 47.9 && val<= 51.4){
+          return 3;
+        }
+        else if (val > 51.4 && val<= 55.5){
+          return 4;
+        }
+        else if (val > 55.5 && val<= 58.0){
+          return 5;
+        }
+        else if (val > 58.0 && val<= 60.1){
+          return 6;
+        }
+        else if (val > 60.1 && val<= 65.7){
+          return 7;
+        }
+        else if (val > 65.7 && val<= 72.4){
+          return 8;
+        }
+        else{
+          return 9;
+        }
+      }
+      
+      function fixMotor(){
+        var val = document.getElementById("motor").value;
+        if (val <= 1.5){
+          return 0;
+        }
+        else if (val > 1.5 && val <= 1.7){
+          return 1;
+        }
+        else if (val > 1.7 && val <= 2.0){
+          return 2;
+        }
+        else{
+          return 3;
+        }
+      }
+
       // Funcion donde se realiza la prediccion
-      function cambiarCelsius() {
-        var celsius = document.getElementById("celsius").value;
-        document.getElementById("lbl-celsius").innerHTML=celsius;
+      function predict() {
+        var marca = document.getElementById("marca").value; //str
+        var modelo = document.getElementById("modelo").value; //str
+        var anio = document.getElementById("anio").value; //str
+        var transmision = document.getElementById("transmision").value; //str
+        var kilometraje = fixKilometraje(); //int
+        var tax = fixImpuesto(); //int
+        var fuelType = document.getElementById("fuelType").value; //str
+        var motor = fixMotor(); //int
+        var millas = fixMillas(); //int
+        document.getElementById("resultado").innerHTML = "Calculando..."
         if (modelo != null) {
           var tensor = tf.tensor1d([parseInt(celsius)]);
           var prediccion = modelo.predict(tensor).dataSync();
           prediccion = Math.round(prediccion, 1);
-          document.getElementById("resultado").innerHTML = celsius + " celsius son " + prediccion + " fahrenheit!";
+          document.getElementById("resultado").innerHTML =  "El precio de su vehiculo es: " + prediccion + "dolares";
         } else {
           document.getElementById("resultado").innerHTML = "Intenta de nuevo en un momento...";
         }
