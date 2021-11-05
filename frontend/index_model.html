@@ -337,9 +337,11 @@
         var millas = fixMillas(); //int
         document.getElementById("resultado").innerHTML = "Calculando..."
         if (modelo != null) {
-          var tensor = tf.tensor1d([parseInt(celsius)]);
+          
+          var tensor = tf.tensor([parseInt(modelo),parseInt(anio),parseInt(transmision),kilometraje,tax,parseInt(fuelType),motor,millas,parseInt(marca)]);
+          //var tensor = tf.tensor1d([parseInt(marca)]);
           var prediccion = modelo.predict(tensor).dataSync();
-          prediccion = Math.round(prediccion, 1);
+          //prediccion = Math.round(prediccion, 1);
           document.getElementById("resultado").innerHTML =  "El precio de su vehiculo es: " + prediccion + "dolares";
         } else {
           document.getElementById("resultado").innerHTML = "Intenta de nuevo en un momento...";
