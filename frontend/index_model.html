@@ -327,7 +327,7 @@
       // Funcion donde se realiza la prediccion
       function predict() {
         var marca = document.getElementById("marca").value; //str
-        var modelo = document.getElementById("modelo").value; //str
+        var model = document.getElementById("modelo").value; //str
         var anio = document.getElementById("anio").value; //str
         var transmision = document.getElementById("transmision").value; //str
         var kilometraje = fixKilometraje(); //int
@@ -338,7 +338,7 @@
         document.getElementById("resultado").innerHTML = "Calculando..."
         if (modelo != null) {
           
-          var tensor = tf.tensor([parseInt(modelo),parseInt(anio),parseInt(transmision),kilometraje,tax,parseInt(fuelType),motor,millas,parseInt(marca)]);
+          var tensor = tf.tensor([parseInt(model),parseInt(anio),0,parseInt(transmision),kilometraje,tax,parseInt(fuelType),motor,millas,parseInt(marca)],[1,10]);
           //var tensor = tf.tensor1d([parseInt(marca)]);
           var prediccion = modelo.predict(tensor).dataSync();
           //prediccion = Math.round(prediccion, 1);
