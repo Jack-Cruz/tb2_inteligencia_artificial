@@ -117,7 +117,7 @@
 
               <form>
                 <div class="mb-3">
-                  <label for="millas" class="form-label">millas del vehiculo: <span id="lbl-millas">0</span></label>
+                  <label for="millas" class="form-label">millas por galon del vehiculo: <span id="lbl-millas">0</span></label>
                     <input type="range" class="form-range" min="18" max="188" id="millas"  oninput="cambiarMillas();" >
                   <div class="form-text">Desliza para cambiar las millas del vehiculo</div>
                 </div>
@@ -338,10 +338,9 @@
         document.getElementById("resultado").innerHTML = "Calculando..."
         if (modelo != null) {
           
-          var tensor = tf.tensor([parseInt(model),parseInt(anio),0,parseInt(transmision),kilometraje,tax,parseInt(fuelType),motor,millas,parseInt(marca)],[1,10]);
-          //var tensor = tf.tensor1d([parseInt(marca)]);
+          var tensor = tf.tensor([parseInt(model),parseInt(anio),parseInt(transmision),kilometraje,tax,parseInt(fuelType),motor,millas,parseInt(marca)],[1,9]);
           var prediccion = modelo.predict(tensor).dataSync();
-          //prediccion = Math.round(prediccion, 1);
+          prediccion = Math.round(prediccion, 2);
           document.getElementById("resultado").innerHTML =  "El precio de su vehiculo es: " + prediccion + "dolares";
         } else {
           document.getElementById("resultado").innerHTML = "Intenta de nuevo en un momento...";
